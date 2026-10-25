@@ -1,4 +1,4 @@
-# musick-project
+
 # Ado Music Player
 
 A desktop music player built with Python and CustomTkinter. It plays audio files from a local music folder, shows artwork, supports search, playback controls, and includes a vinyl-style animated disc while a song is playing.
