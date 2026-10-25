@@ -65,6 +65,3 @@ The app will create a `music` folder next to the script if it does not exist yet
 - Artwork is pulled from embedded metadata when available, otherwise it generates a color-based fallback cover.
 - The Windows-only `pywinstyles` and `os.startfile` usage are part of the current UI behavior.
 
-## License
-
-This project does not currently include a license file. If you plan to share or distribute it publicly, add a license that matches your intended usage.
