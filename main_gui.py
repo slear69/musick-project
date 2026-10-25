@@ -2,6 +2,7 @@
 import os
 import shutil
 import hashlib
+import sys
 import customtkinter as ct
 import pywinstyles
 import vlc
@@ -14,9 +15,27 @@ from vinyl_disk import VinylDisk
 ct.set_appearance_mode("dark")
  
 # the "music" folder sits next to your "ui" folder, e.g. D:\MUSIC\music
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MUSIC_DIR = os.path.join(BASE_DIR, "music")
+BASE_DIR = (
+    os.path.dirname(sys.executable)
+    if getattr(sys, "frozen", False)
+    else os.path.dirname(os.path.abspath(__file__))
+)
+RESOURCE_DIR = getattr(sys, "_MEIPASS", BASE_DIR)
 AUDIO_EXT = (".mp3", ".wav", ".flac", ".ogg", ".m4a")
+
+music_candidates = [os.path.join(BASE_DIR, "music")]
+if getattr(sys, "frozen", False):
+    music_candidates.append(os.path.join(os.path.dirname(BASE_DIR), "music"))
+
+MUSIC_DIR = next(
+    (
+        folder
+        for folder in music_candidates
+        if os.path.isdir(folder)
+        and any(name.lower().endswith(AUDIO_EXT) for name in os.listdir(folder))
+    ),
+    next((folder for folder in music_candidates if os.path.isdir(folder)), music_candidates[0]),
+)
 os.makedirs(MUSIC_DIR, exist_ok=True)
  
  
@@ -307,7 +326,7 @@ class App(ct.CTk):
         SIDE, MAIN = "#192740", "#24385A"     
         size = size
         X, Y = x, y
-        src = Image.open(os.path.join(BASE_DIR, img)).convert("RGBA").resize((size, size), Image.LANCZOS)
+        src = Image.open(os.path.join(RESOURCE_DIR, img)).convert("RGBA").resize((size, size), Image.LANCZOS)
         bg = Image.new("RGBA",(size , size),MAIN)
         left_w= max(0,min(size,260-X))
         bg.paste(Image.new("RGBA", (left_w, size), SIDE), (0, 0))  
